@@ -1,0 +1,13 @@
+{
+    "output": "a.out",
+    "command": "g++ -fmodules-ts",
+    "dependencies": [
+        "AntohiRobert_counter2",
+        "AntohiRobert_counter",
+        "AntohiRobert_binpow"
+    ],
+    "liborexe": "exe",
+    "srcfiles": [
+        "*.cpp"
+    ]
+}
