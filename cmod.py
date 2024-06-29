@@ -4,7 +4,7 @@ import os
 import subprocess
 import sys
 
-dependenciesout=set()
+#dependenciesout=set()
 
 def clone_dep(name):
     user=""
@@ -34,7 +34,7 @@ def process_dep(name):
         check="./build/"+dep+".o"
         if not os.path.exists(check):
             process_dep(dep)
-        dependenciesout.add(check)
+        #dependenciesout.add(check)
     cmd=data["command"]
     if data["liborexe"]=="lib":
         cmd+=" -c"
@@ -74,13 +74,16 @@ def process_module(path):
         check="./build/"+dep+".o"
         if not os.path.exists(check):
             process_dep(dep)
-        dependenciesout.add(check)
+        #dependenciesout.add(check)
     cmd=data["command"]
     if data["liborexe"]=="lib":
         cmd+" -c"
+    """
     for dep in dependenciesout:
         cmd+=" "
         cmd+=dep
+    """
+    cmd+=" ./build/*.o "
     #cmd+=" "
     #cmd+=objfiles
     for srcfile in data["srcfiles"]:
@@ -93,15 +96,6 @@ def process_module(path):
         print(result)
     except subprocess.CalledProcessError as e:
         print("Error:", e)
-
-"""
-def main():
-    path="./"
-    process_module(path)
-
-if __name__ == '__main__':
-    main()
-"""
 
 def build():
     path="./"
