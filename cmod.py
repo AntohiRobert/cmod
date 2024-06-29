@@ -2,6 +2,7 @@
 import json
 import os
 import subprocess
+import sys
 
 dependenciesout=set()
 
@@ -36,7 +37,6 @@ def process_dep(name):
         dependenciesout.add(check)
     cmd=data["command"]
     if data["liborexe"]=="lib":
-        #print("YEYYY")
         cmd+=" -c"
     #cmd+=" "
     for srcfile in data["srcfiles"]:
@@ -94,9 +94,80 @@ def process_module(path):
     except subprocess.CalledProcessError as e:
         print("Error:", e)
 
+"""
 def main():
     path="./"
     process_module(path)
 
 if __name__ == '__main__':
     main()
+"""
+
+def build():
+    path="./"
+    if len(sys.argv)>=3 and sys.argv[2]=="-nocache":
+        try:
+            result = subprocess.run("rm -rf dependencies build", shell=True, check=True)
+            print(result)
+        except subprocess.CalledProcessError as e:
+            print("Error:", e)
+    process_module(path)
+    
+def addsrc():
+    path="./"
+    file=path+"cmodconfig.json"
+    with open(file, 'r') as f:
+        data = json.load(f)
+    data["srcfiles"].append(sys.argv[2])
+    with open(file,'w') as f:
+        json.dump(data, f, indent=4)
+    print(data)
+    
+def addep():
+    path="./"
+    file=path+"cmodconfig.json"
+    with open(file, 'r') as f:
+        data = json.load(f)
+    data["dependencies"].append(sys.argv[2])
+    with open(file,'w') as f:
+        json.dump(data, f, indent=4)
+    print(data)
+    
+def init():
+    path="./"
+    file=path+"cmodconfig.json"
+    default={}
+    default["output"]="a.out"
+    default["command"]="g++ -fmodules-ts"
+    default["dependencies"]=[]
+    default["liborexe"]="exe"
+    default["srcfiles"]=["*.cpp"]
+    with open(file,'w') as f:
+        json.dump(default, f, indent=4)
+    
+def usage():
+    """This is what is shown on the terminal in case of incorrect usage"""
+    print("Usage scenario 1:python cmod.py build [-nocache]")
+    print("Usage scenario 2:python cmod.py addsrc main.cpp")
+    print("Usage scenario 3:python cmod.py addep AntohiRobert_counter")
+    print("Usage scenario 2:python cmod.py init")
+    
+
+def main():
+    if sys.argv[1] == "build":
+        build()
+    elif sys.argv[1] == "addsrc":
+        addsrc()
+    elif sys.argv[1] == "addep":
+        addep()
+    elif sys.argv[1] == "init":
+        init()
+    else:
+        usage()
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        usage()
+    else:
+        main()
