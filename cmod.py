@@ -36,7 +36,7 @@ def process_dep(name):
         if not os.path.exists(check):
             process_dep(dep)
         #dependenciesout.add(check)
-    compiler = os.getenv("CMOD_CXX", "g++")
+    compiler = os.getenv("CMOD_CXX", "g++-11")
     cmd = compiler + " -fmodules-ts"
     if data["liborexe"]=="lib":
         cmd+=" -c"
@@ -77,7 +77,7 @@ def process_module(path):
         if not os.path.exists(check):
             process_dep(dep)
         #dependenciesout.add(check)
-    compiler = os.getenv("CMOD_CXX", "g++")
+    compiler = os.getenv("CMOD_CXX", "g++-11")
     cmd = compiler + " -fmodules-ts"
     if data["liborexe"]=="lib":
         cmd+=" -c"
