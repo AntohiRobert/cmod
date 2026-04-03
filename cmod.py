@@ -7,6 +7,12 @@ import sys
 
 #dependenciesout=set()
 
+def get_compiler():
+    gcc = os.getenv("CMOD_CXX")
+    if not gcc:
+        raise RuntimeError("Environment variable CMOD_CXX is not set")
+    return gcc
+
 def clone_dep(name):
     user=""
     for l in name:
@@ -24,78 +30,76 @@ def clone_dep(name):
 
 
 def process_dep(name):
-    path="./dependencies/"+name
+    path = "./dependencies/" + name
+
     if not os.path.isdir(path):
         clone_dep(name)
-    file=path+"/cmodconfig.json"
-    with open(file,'r') as f:
-        data=json.load(f)
-    #dependenciesout.append(data["output"])
+
+    file = path + "/cmodconfig.json"
+    with open(file, "r") as f:
+        data = json.load(f)
+
     for dep in data["dependencies"]:
-        check="./build/"+dep+".o"
+        check = "./build/" + dep + ".o"
         if not os.path.exists(check):
             process_dep(dep)
-        #dependenciesout.add(check)
-    compiler = os.getenv("CMOD_CXX", "g++-11")
-    cmd = compiler + " -fmodules-ts"
-    if data["liborexe"]=="lib":
-        cmd+=" -c"
-    #cmd+=" "
+
+    compiler = get_compiler()   # ✅ FIXED
+
+    cmd = [compiler, "-fmodules-ts"]
+
+    if data["liborexe"] == "lib":
+        cmd.append("-c")
+
     for srcfile in data["srcfiles"]:
-        cmd+=" "
-        cmd+=path+"/"+srcfile
-    #cmd+=path+"/"+data["srcfiles"]
-    cmd+=" -o "+data["output"]
+        cmd.append(path + "/" + srcfile)
+
+    cmd += ["-o", data["output"]]
+
     try:
-        result = subprocess.run(cmd, shell=True,check=True)
+        result = subprocess.run(cmd, check=True)
         print(result)
     except subprocess.CalledProcessError as e:
         print("Error:", e)
         
 
 def process_module(path):
-    build=path+"build"
+    build = path + "build"
     if not os.path.isdir(build):
-        try:
-            result = subprocess.run("mkdir build", shell=True, check=True)
-            print(result)
-        except subprocess.CalledProcessError as e:
-            print("Error:", e)
-    deps=path+"dependencies"
+        os.makedirs(build, exist_ok=True)
+
+    deps = path + "dependencies"
     if not os.path.isdir(deps):
-        try:
-            result = subprocess.run("mkdir dependencies", shell=True, check=True)
-            print(result)
-        except subprocess.CalledProcessError as e:
-            print("Error:", e)
-    file=path+"cmodconfig.json"
-    with open(file, 'r') as f:
+        os.makedirs(deps, exist_ok=True)
+
+    file = path + "cmodconfig.json"
+    with open(file, "r") as f:
         data = json.load(f)
-    objfiles=""
+
     for dep in data["dependencies"]:
-        check="./build/"+dep+".o"
+        check = "./build/" + dep + ".o"
         if not os.path.exists(check):
             process_dep(dep)
-        #dependenciesout.add(check)
-    compiler = os.getenv("CMOD_CXX", "g++-11")
-    cmd = compiler + " -fmodules-ts"
-    if data["liborexe"]=="lib":
-        cmd+=" -c"
-    """
-    for dep in dependenciesout:
-        cmd+=" "
-        cmd+=dep
-    """
-    cmd+=" ./build/*.o "
-    #cmd+=" "
-    #cmd+=objfiles
+
+    compiler = get_compiler()   # ✅ FIXED
+
+    cmd = [compiler, "-fmodules-ts"]
+
+    if data["liborexe"] == "lib":
+        cmd.append("-c")
+
+    # ❌ replace wildcard with deterministic list
+    for f in sorted(os.listdir("./build")):
+        if f.endswith(".o"):
+            cmd.append("./build/" + f)
+
     for srcfile in data["srcfiles"]:
-        cmd+=" "
-        cmd+=srcfile
-    #cmd+=" "
-    #cmd+=data["srcfiles"]
+        cmd.append(srcfile)
+
+    cmd += ["-o", data["output"]]
+
     try:
-        result = subprocess.run(cmd, shell=True,check=True)
+        result = subprocess.run(cmd, check=True)
         print(result)
     except subprocess.CalledProcessError as e:
         print("Error:", e)
