@@ -2,8 +2,8 @@
     "output": "a.out",
     "command": "g++ -fmodules-ts",
     "dependencies": [
-        "AntohiRobert_counter2",
-        "AntohiRobert_binpow"
+        "AntohiRobert_binpow",
+        "AntohiRobert_counter2"
     ],
     "liborexe": "exe",
     "srcfiles": [
