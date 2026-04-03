@@ -2,6 +2,7 @@
 import json
 import os
 import subprocess
+import shutil
 import sys
 
 #dependenciesout=set()
@@ -35,7 +36,8 @@ def process_dep(name):
         if not os.path.exists(check):
             process_dep(dep)
         #dependenciesout.add(check)
-    cmd=data["command"]
+    compiler = os.getenv("CMOD_CXX", "g++")
+    cmd = compiler + " -fmodules-ts"
     if data["liborexe"]=="lib":
         cmd+=" -c"
     #cmd+=" "
@@ -75,9 +77,10 @@ def process_module(path):
         if not os.path.exists(check):
             process_dep(dep)
         #dependenciesout.add(check)
-    cmd=data["command"]
+    compiler = os.getenv("CMOD_CXX", "g++")
+    cmd = compiler + " -fmodules-ts"
     if data["liborexe"]=="lib":
-        cmd+" -c"
+        cmd+=" -c"
     """
     for dep in dependenciesout:
         cmd+=" "
@@ -132,7 +135,8 @@ def init():
     file=path+"cmodconfig.json"
     default={}
     default["output"]="a.out"
-    default["command"]="g++ -fmodules-ts"
+    gcc = os.getenv("CMOD_CXX") or shutil.which("g++-11") or "g++"
+    default["command"]=gcc+ " -fmodules-ts"
     default["dependencies"]=[]
     default["liborexe"]="exe"
     default["srcfiles"]=["*.cpp"]
