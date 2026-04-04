@@ -1,8 +1,4 @@
 # CMod / build cache
 build/
 dependencies/
-cache/
-.cmod/
-gcm-cache/
-gcm_cache/
-*.cache
+gcm.cache/
