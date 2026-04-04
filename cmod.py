@@ -70,6 +70,7 @@ def process_dep(name):
         cmd.append(path + "/" + srcfile)
 
     cmd.append (["-o", data["output"]]);
+    print(cmd)
 
     try:
         result = subprocess.run(cmd, check=True)
@@ -111,7 +112,8 @@ def process_module(path):
     for srcfile in data["srcfiles"]:
         cmd.append(srcfile)
 
-    cmd += ["-o", data["output"]]
+    cmd.append( ["-o", data["output"]])
+    print(cmd)
 
     try:
         result = subprocess.run(cmd, check=True)
