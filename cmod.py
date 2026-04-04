@@ -44,6 +44,8 @@ def clone_dep(name):
 
 
 def process_dep(name):
+    
+    print("ENTER PROCESS DEP")
     path = "./dependencies/" + name
 
     if not os.path.isdir(path):
@@ -80,6 +82,7 @@ def process_dep(name):
         
 
 def process_module(path):
+    print(">>> ENTER PROCESS MODULE")
     build = path + "build"
     if not os.path.isdir(build):
         os.makedirs(build, exist_ok=True)
