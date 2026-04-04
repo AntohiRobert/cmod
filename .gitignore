@@ -2,3 +2,4 @@
 build/
 dependencies/
 gcm.cache/
+*.out
