@@ -71,7 +71,7 @@ def process_dep(name):
     for srcfile in data["srcfiles"]:
         cmd.append(path + "/" + srcfile)
 
-    cmd.append (["-o", data["output"]]);
+    cmd.extend (["-o", data["output"]]);
     print(cmd)
 
     try:
@@ -115,7 +115,7 @@ def process_module(path):
     for srcfile in data["srcfiles"]:
         cmd.append(srcfile)
 
-    cmd.append( ["-o", data["output"]])
+    cmd.extend( ["-o", data["output"]])
     print(cmd)
 
     try:
