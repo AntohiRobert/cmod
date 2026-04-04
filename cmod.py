@@ -6,13 +6,10 @@ import shutil
 import sys
 import glob
 
-#dependenciesout=set()
-
 def get_compiler():
     gcc_path = shutil.which("g++-12")
 
     if not gcc_path:
-        # Homebrew fallback paths (Apple Silicon + Intel)
         candidates = [
             "/opt/homebrew/opt/gcc@12/bin/g++-12",
             "/usr/local/opt/gcc@12/bin/g++-12"
@@ -72,7 +69,6 @@ def process_dep(name):
     for srcfile in data["srcfiles"]:
         files=glob.glob(os.path.join(path, srcfile))
         cmd.extend(files)
-        #cmd.append(path + "/" + srcfile)
 
     cmd.extend (["-o", data["output"]]);
     print(cmd)
@@ -103,14 +99,13 @@ def process_module(path):
         if not os.path.exists(check):
             process_dep(dep)
 
-    compiler = get_compiler()   # ✅ FIXED
+    compiler = get_compiler()
 
     cmd = [compiler, "-fmodules-ts"]
 
     if data["liborexe"] == "lib":
         cmd.append("-c")
 
-    # ❌ replace wildcard with deterministic list
     for f in sorted(os.listdir("./build")):
         if f.endswith(".o"):
             cmd.append("./build/" + f)
@@ -118,7 +113,6 @@ def process_module(path):
     for srcfile in data["srcfiles"]:
         files=glob.glob(os.path.join(path,srcfile))
         cmd.extend(files)
-        #cmd.append(srcfile)
 
     cmd.extend( ["-o", data["output"]])
     print(cmd)
@@ -164,7 +158,6 @@ def init():
     file=path+"cmodconfig.json"
     default={}
     default["output"]="a.out"
-    #gcc = os.getenv("CMOD_CXX") or shutil.which("g++-11") or "g++"
     gcc=get_compiler()
     default["command"]=gcc+ " -fmodules-ts"
     default["dependencies"]=[]
