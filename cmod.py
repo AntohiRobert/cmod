@@ -164,7 +164,8 @@ def init():
     file=path+"cmodconfig.json"
     default={}
     default["output"]="a.out"
-    gcc = os.getenv("CMOD_CXX") or shutil.which("g++-11") or "g++"
+    #gcc = os.getenv("CMOD_CXX") or shutil.which("g++-11") or "g++"
+    gcc=get_compiler()
     default["command"]=gcc+ " -fmodules-ts"
     default["dependencies"]=[]
     default["liborexe"]="exe"
