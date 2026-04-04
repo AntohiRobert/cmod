@@ -174,10 +174,10 @@ def init():
     
 def usage():
     """This is what is shown on the terminal in case of incorrect usage"""
-    print("Usage scenario 1:python cmod.py build [-nocache]")
+    print("Usage scenario 1:python cmod.py init")
     print("Usage scenario 2:python cmod.py addsrc main.cpp")
     print("Usage scenario 3:python cmod.py addep AntohiRobert_counter")
-    print("Usage scenario 4:python cmod.py init")
+    print("Usage scenario 4:python cmod.py build [-nocache]")
     
 
 def main():
