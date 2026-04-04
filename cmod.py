@@ -8,10 +8,24 @@ import sys
 #dependenciesout=set()
 
 def get_compiler():
-    gcc = os.getenv("CMOD_CXX")
-    if not gcc:
-        raise RuntimeError("Environment variable CMOD_CXX is not set")
-    return gcc
+    gcc_path = shutil.which("g++-12")
+
+    if not gcc_path:
+        # Homebrew fallback paths (Apple Silicon + Intel)
+        candidates = [
+            "/opt/homebrew/opt/gcc@12/bin/g++-12",
+            "/usr/local/opt/gcc@12/bin/g++-12"
+        ]
+
+        for c in candidates:
+            if os.path.exists(c):
+                gcc_path = c
+                break
+
+    if not gcc_path:
+        raise RuntimeError("Homebrew GCC 12 not found")
+
+    return gcc_path
 
 def clone_dep(name):
     user=""
