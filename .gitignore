@@ -1,26 +1,8 @@
-# =========================
-# Build outputs
-# =========================
+# CMod / build cache
 build/
-
-# =========================
-# CMod generated folders
-# =========================
 dependencies/
-# =========================
-# Python
-# =========================
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-
-# =========================
-# macOS
-# =========================
-.DS_Store
-
+cache/
+.cmod/
+gcm-cache/
+gcm_cache/
+*.cache
