@@ -4,6 +4,7 @@ import os
 import subprocess
 import shutil
 import sys
+import glob
 
 #dependenciesout=set()
 
@@ -69,7 +70,9 @@ def process_dep(name):
         cmd.append("-c")
 
     for srcfile in data["srcfiles"]:
-        cmd.append(path + "/" + srcfile)
+        files=glob.glob(os.path.join(path, srcfile))
+        cmd.extend(files)
+        #cmd.append(path + "/" + srcfile)
 
     cmd.extend (["-o", data["output"]]);
     print(cmd)
@@ -113,7 +116,9 @@ def process_module(path):
             cmd.append("./build/" + f)
 
     for srcfile in data["srcfiles"]:
-        cmd.append(srcfile)
+        files=glob.glob(os.path.join(path,srcfile))
+        cmd.extend(files)
+        #cmd.append(srcfile)
 
     cmd.extend( ["-o", data["output"]])
     print(cmd)
