@@ -59,6 +59,7 @@ def process_dep(name):
             process_dep(dep)
 
     compiler = get_compiler()   # ✅ FIXED
+    print(compiler)
 
     cmd = [compiler, "-fmodules-ts"]
 
@@ -68,7 +69,7 @@ def process_dep(name):
     for srcfile in data["srcfiles"]:
         cmd.append(path + "/" + srcfile)
 
-    cmd += ["-o", data["output"]]
+    cmd.append (["-o", data["output"]]);
 
     try:
         result = subprocess.run(cmd, check=True)
